@@ -45,12 +45,11 @@ today= str(today)
 
 def blacklist():
     check_month_end=[now.day,now.month]
-    end_dates=[[31,1],[28,2],[5,8],[31,3],[30,4],[31,5],[30,6],[31,7],[31,8],[30,9],[31,10],[30,11],[31,12]]
+    end_dates=[[31,1],[28,2],[29,2],[31,3],[30,4],[31,5],[30,6],[31,7],[31,8],[30,9],[31,10],[30,11],[31,12]]
     for index in range(0,12,1):
         if check_month_end ==end_dates[index]:
             return True
 
-    
 #define function to scan the cards
 def scan():
     # This loop checks for chips. If one is near it will get the UID
@@ -81,8 +80,7 @@ def teacher():
 
 def student():
     student_uid = scan()
-    return(student_uid)  
-
+    return(student_uid)
 
 #main loop
 print("press button 1 for teacher")
@@ -124,17 +122,53 @@ try:
                     sheet.update_cell(row_number,count,'1')
                     print('done')
                     sheet.update_cell(2,count,today)
+                   
 
                 if blacklist()==True:
                     count=count+1
                     sheet.update_cell(2,count,"month_end")
+                    '''f_element=str(sheet.cell(row_number,4).value)
+                    if f_element=='':
+                        f_element='0'
+                    row_list=[int(f_element)]
+                    for j in range(4,count,1):
+                        element=str(sheet.cell(row_number,j).value)
+                        if element=='':
+                            element='0'
+                            row_list.append(int(element))
+                            j=j+1
+                    monthly_count=0
+                    for jx in range(0,(len(row_list)),1):
+                        monthly_count=monthly_count+row_list[jx]
+                        jx=jx+1
+                    sheet.update_cell(row_number,count,monthly_count)
+                    print("month end",monthly_count)'''
                     count=count+1
+                    sheet.update_cell(1,1,count)
                     
 
+    
         if GPIO.input(button3)==0:
+            print('end of attendance.')
+            fe=str(sheet.cell(3,count).value)
+            if fe=='':
+                fe='0'
+            col_list=[int(fe)]
+            for i in range(4,7,1):
+                e=str(sheet.cell(i,count).value)
+                if e=='':
+                    e='0'
+                col_list.append(int(e))
+                i=i+1
+            print(col_list)
+            todays_count=0
+            for ix in range(0,(len(col_list)),1):
+                todays_count=todays_count+col_list[ix]
+                ix=ix+1
+            sheet.update_cell(8,count,todays_count)
+            print("todays_count is:-",todays_count)
             count = count + 1
             sheet.update_cell(1,1,count)
-            print('end of attendance.')
             break
 
 except KeyboardInterrupt:
